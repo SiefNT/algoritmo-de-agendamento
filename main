@@ -1,42 +1,39 @@
-
 import tkinter as tk
 from functools import partial
 
-
-class MainWindow:
-    def __init__(self, root):
-        self.root = root
-        root.geometry("550x400+450+200")
-        self.frame = tk.Frame(self.root)
-        tk.Label(self.root, text="ALGORITMOS DE AGENDAMENTO", font="verdana 14 bold").grid(padx=150)
-        tk.Label(self.root, text="").grid()
-        tk.Label(self.root, text="").grid()
-        tk.Label(self.root, text="").grid()
-        self.b1 = tk.Button(self.root, text="Round Robin", font="verdana 12 bold", bg="gray", width=15,
+class JanelaPrincipal:
+    def __init__(self, raiz):
+        self.raiz = raiz
+        raiz.geometry("550x400+450+200")
+        self.frame = tk.Frame(self.raiz)
+        tk.Label(self.raiz, text="ALGORITMOS DE AGENDAMENTO", font="verdana 14 bold").grid(padx=150)
+        tk.Label(self.raiz, text="").grid()
+        tk.Label(self.raiz, text="").grid()
+        tk.Label(self.raiz, text="").grid()
+        self.b1 = tk.Button(self.raiz, text="Round Robin", font="verdana 12 bold", bg="gray", width=15,
                             command=partial(self.roundrobin, "ROUND-ROBIN")).grid()
-        tk.Label(self.root, text="").grid()
-        self.b2 = tk.Button(self.root, text="FCFS", font="verdana 12 bold", bg="gray", width=15,
+        tk.Label(self.raiz, text="").grid()
+        self.b2 = tk.Button(self.raiz, text="FCFS", font="verdana 12 bold", bg="gray", width=15,
                             command=partial(self.roundrobin, "FCFS")).grid()
-        tk.Label(self.root, text="").grid()
-        self.b2 = tk.Button(self.root, text="SJF", font="verdana 12 bold", bg="gray", width=15,
+        tk.Label(self.raiz, text="").grid()
+        self.b2 = tk.Button(self.raiz, text="SJF", font="verdana 12 bold", bg="gray", width=15,
                             command=partial(self.roundrobin, "SJF")).grid()
-        tk.Label(self.root, text="").grid()
-        self.b2 = tk.Button(self.root, text="SRTF", font="verdana 12 bold", bg="gray", width=15,
+        tk.Label(self.raiz, text="").grid()
+        self.b2 = tk.Button(self.raiz, text="SRTF", font="verdana 12 bold", bg="gray", width=15,
                             command=partial(self.roundrobin, "SRTF")).grid()
-        tk.Label(self.root, text="").grid()
-        self.b2 = tk.Button(self.root, text="PRIORITY", font="verdana 12 bold", bg="gray", width=15,
+        tk.Label(self.raiz, text="").grid()
+        self.b2 = tk.Button(self.raiz, text="PRIORITY", font="verdana 12 bold", bg="gray", width=15,
                             command=partial(self.roundrobin, "Priority")).grid()
         self.frame.grid()
 
     def roundrobin(self, algo):
-        self.root.withdraw()
-        self.rr = tk.Toplevel(self.root)
-        bb = robin(self.root, self.rr, algo)
+        self.raiz.withdraw()
+        self.rr = tk.Toplevel(self.raiz)
+        bb = Agendador(self.raiz, self.rr, algo)
 
-
-class robin:
-    def __init__(self, root, rr, algo):
-        self.root = root
+class Agendador:
+    def __init__(self, raiz, rr, algo):
+        self.raiz = raiz
         self.rr = rr
         self.algo = algo
         rr.geometry("+450+200")
@@ -102,28 +99,29 @@ class robin:
             tk.Label(self.rr, text="Prioridade de acordo com :", font="verdana 10 bold").grid(row=13, column=1)
             tk.Label(self.rr, text="").grid()
             self.butt = tk.Button(self.rr, text="Maior valor", command=partial(self.Choices, "MV")).grid(row=15,
-                                                                                                          column=0)
+                                                                                                         column=0)
             self.butt = tk.Button(self.rr, text="Menor valor", command=partial(self.Choices, "VL")).grid(row=15,
                                                                                                          column=1)
             tk.Label(self.rr, text="").grid()
             z = 5
-        self.button1 = tk.Button(self.rr, text="BACK", command=self.Back).grid(row=13 + z, column=0)
+        self.button1 = tk.Button(self.rr, text="VOLTAR", command=self.voltar).grid(row=13 + z, column=0)
         self.wt = tk.Button(self.rr, text="CALCULAR", width=15, command=self.calculaterr).grid(row=13 + z, column=1)
-        self.button1 = tk.Button(self.rr, text="SAIR", command=self.clear).grid(row=13 + z, column=2)
+        self.button1 = tk.Button(self.rr, text="SAIR", command=self.limpar).grid(row=13 + z, column=2)
         self.frame.grid()
 
     def Choices(self, choice):
         self.choice = choice
         tk.Label(self.rr, text="<---REQUERIMENTO APROVADO--->", font="verdana 10 ").grid(row=17, column=1)
 
-    def Back(self):
+    def voltar(self):
         self.rr.destroy()
-        self.root.deiconify()
+        self.raiz.deiconify()
 
-    def clear(self):
+    def limpar(self):
         self.rr.destroy()
-        self.root.destroy()
+        self.raiz.destroy()
 
+    #
     def calculaterr(self):
         self.rr.withdraw()
         self.calrr = tk.Toplevel(self.rr)
@@ -131,34 +129,41 @@ class robin:
         if (self.algo == "ROUND-ROBIN"):
             obj = RoundRobin(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
                              self.b11.get(), self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(),
-                             self.c11.get(), self.root, self.rr, self.calrr, self.algo)
-            obj.processData()
+                             self.c11.get(), self.raiz, self.rr, self.calrr, self.algo)
+            obj.processarDados()
         elif (self.algo == "FCFS"):
-            obj = FCFS(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(), self.b11.get(),
-                       self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.root, self.rr, self.calrr,
+            obj = FCFS(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
+                       self.b11.get(),
+                       self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.raiz, self.rr,
+                       self.calrr,
                        self.algo)
-            obj.processData()
+            obj.processarDados()
         elif (self.algo == "SJF"):
-            obj = SJF(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(), self.b11.get(),
-                      self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.root, self.rr, self.calrr,
+            obj = SJF(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
+                      self.b11.get(),
+                      self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.raiz, self.rr,
+                      self.calrr,
                       self.algo)
-            obj.processData()
+            obj.processarDados()
         elif (self.algo == "SRTF"):
-            obj = SRTF(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(), self.b11.get(),
-                       self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.root, self.rr, self.calrr,
+            obj = SRTF(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
+                       self.b11.get(),
+                       self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.raiz, self.rr,
+                       self.calrr,
                        self.algo)
-            obj.processData()
+            obj.processarDados()
         elif (self.algo == "Priority"):
-            obj = Priority(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(), self.b11.get(),
-                     self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.p11.get(), self.p22.get(),
-                     self.p33.get(), self.p44.get(), self.p55.get(), self.root, self.rr, self.calrr, self.algo,
-                     self.choice)
-            obj.processData()
+            obj = Prioridade(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
+                             self.b11.get(), self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(),
+                             self.p11.get(), self.p22.get(), self.p33.get(), self.p44.get(), self.p55.get(),
+                             self.raiz, self.rr, self.calrr, self.algo, self.choice)
+            obj.processarDados()
         return
 
 
-class Priority:
-    def __init__(self, a1, a2, a3, a4, a5, b1, b2, b3, b4, b5, p1, p2, p3, p4, p5, root, rr, calrr, algo, choice):
+class Prioridade:
+    def __init__(self, a1, a2, a3, a4, a5, b1, b2, b3, b4, b5, p1, p2, p3, p4, p5, raiz, rr, calrr, algo, choice):
+        # Inicializa os atributos da classe com os parâmetros fornecidos
         self.a1 = a1
         self.a2 = a2
         self.a3 = a3
@@ -169,7 +174,7 @@ class Priority:
         self.b3 = b3
         self.b4 = b4
         self.b5 = b5
-        self.root = root
+        self.raiz = raiz
         self.rr = rr
         self.calrr = calrr
         self.algo = algo
@@ -180,77 +185,81 @@ class Priority:
         self.p5 = p5
         self.choice = choice
 
-    def processData(self):
-        process_data = []
-        temporary = []
-        process_id = [1, 2, 3, 4, 5]
-        arrival_time = [self.a1, self.a2, self.a3, self.a4, self.a5]
-        burst_time = [self.b1, self.b2, self.b3, self.b4, self.b5]
-        priority = [self.p1, self.p2, self.p3, self.p4, self.p5]
+    def processarDados(self):
+        # Processa os dados dos processos para serem utilizados no escalonamento
+        dados_processo = []
+        temporario = []
+        id_processo = [1, 2, 3, 4, 5]
+        tempo_chegada = [self.a1, self.a2, self.a3, self.a4, self.a5]
+        tempo_execucao = [self.b1, self.b2, self.b3, self.b4, self.b5]
+        prioridade = [self.p1, self.p2, self.p3, self.p4, self.p5]
         for i in range(5):
-            temporary.extend([process_id[i], arrival_time[i], burst_time[i], 0, priority[i]])
-            process_data.append(temporary)
-            temporary = []
-        Priority.schedulingProcess(self, process_data)
+            temporario.extend([id_processo[i], tempo_chegada[i], tempo_execucao[i], 0, prioridade[i]])
+            dados_processo.append(temporario)
+            temporario = []
+        self.escalonarProcessos(dados_processo)
 
-    def schedulingProcess(self, process_data):
-        s_time = 0
-        process_data.sort(key=lambda x: x[1])
+    def escalonarProcessos(self, dados_processo):
+        # Realiza o escalonamento dos processos com base nas prioridades
+        tempo_atual = 0
+        dados_processo.sort(key=lambda x: x[1])  # Ordena os processos por tempo de chegada
         for i in range(5):
-            ready_queue = []
-            normal_queue = []
+            fila_pronta = []
+            fila_normal = []
             for j in range(5):
-                if (process_data[j][1] <= s_time and process_data[j][3] == 0):
-                    ready_queue.append([process_data[j][0], process_data[j][1], process_data[j][2], process_data[j][4]])
-                elif (process_data[j][3] == 0):
-                    normal_queue.append(
-                        [process_data[j][0], process_data[j][1], process_data[j][2], process_data[j][4]])
-            if len(ready_queue) != 0:
+                if (dados_processo[j][1] <= tempo_atual and dados_processo[j][3] == 0):
+                    fila_pronta.append([dados_processo[j][0], dados_processo[j][1], dados_processo[j][2], dados_processo[j][4]])
+                elif (dados_processo[j][3] == 0):
+                    fila_normal.append([dados_processo[j][0], dados_processo[j][1], dados_processo[j][2], dados_processo[j][4]])
+            if len(fila_pronta) != 0:
                 if self.choice == "MV":
-                    ready_queue.sort(key=lambda x: x[3], reverse=True)
+                    fila_pronta.sort(key=lambda x: x[3], reverse=True)  # Ordena por prioridade (maior valor primeiro)
                 elif self.choice == "VL":
-                    ready_queue.sort(key=lambda x: x[3])
-                s_time = s_time + ready_queue[0][2]
-                for k in range(len(process_data)):
-                    if process_data[k][0] == ready_queue[0][0]:
+                    fila_pronta.sort(key=lambda x: x[3])  # Ordena por prioridade (menor valor primeiro)
+                tempo_atual = tempo_atual + fila_pronta[0][2]  # Atualiza o tempo de execução
+                for k in range(len(dados_processo)):
+                    if dados_processo[k][0] == fila_pronta[0][0]:
                         break
-                process_data[k][3] = 1
-                process_data[k].append(s_time)
-            elif len(ready_queue) == 0:
-                if s_time < normal_queue[0][1]:
-                    s_time = normal_queue[0][1]
-                s_time = s_time + normal_queue[0][2]
-                for k in range(len(process_data)):
-                    if process_data[k][0] == normal_queue[0][0]:
+                dados_processo[k][3] = 1  # Marca o processo como executado
+                dados_processo[k].append(tempo_atual)  # Adiciona o tempo de término do processo
+            elif len(fila_pronta) == 0:
+                if tempo_atual < fila_normal[0][1]:
+                    tempo_atual = fila_normal[0][1]
+                tempo_atual = tempo_atual + fila_normal[0][2]
+                for k in range(len(dados_processo)):
+                    if dados_processo[k][0] == fila_normal[0][0]:
                         break
-                process_data[k][3] = 1
-                process_data[k].append(s_time)
-        t_time = Priority.calculateTurnaroundTime(self, process_data)
-        w_time = Priority.calculateWaitingTime(self, process_data)
-        d = Displaydata(self.root, self.rr, self.calrr, process_data, t_time, w_time, 0, self.algo)
-        d.Display()
+                dados_processo[k][3] = 1
+                dados_processo[k].append(tempo_atual)
+        tempo_retorno_medio = self.calcularTempoRetorno(dados_processo)  # Calcula o tempo de retorno médio
+        tempo_espera_medio = self.calcularTempoEspera(dados_processo)  # Calcula o tempo de espera médio
+        d = ExibirDados(self.raiz, self.rr, self.calrr, dados_processo, tempo_retorno_medio, tempo_espera_medio, 0, self.algo)  # Exibe os resultados
+        d.exibir()
 
-    def calculateTurnaroundTime(self, process_data):
-        total_turnaround_time = 0
-        for i in range(len(process_data)):
-            turnaround_time = process_data[i][5] - process_data[i][1]
-            total_turnaround_time = total_turnaround_time + turnaround_time
-            process_data[i].append(turnaround_time)
-        average_turnaround_time = total_turnaround_time / 5
-        return average_turnaround_time
+    def calcularTempoRetorno(self, dados_processo):
+        # Calcula o tempo de retorno médio dos processos
+        tempo_total_retorno = 0
+        for i in range(len(dados_processo)):
+            tempo_retorno = dados_processo[i][5] - dados_processo[i][1]  # Tempo de término - Tempo de chegada
+            tempo_total_retorno = tempo_total_retorno + tempo_retorno
+            dados_processo[i].append(tempo_retorno)
+        tempo_retorno_medio = tempo_total_retorno / 5
+        return tempo_retorno_medio
 
-    def calculateWaitingTime(self, process_data):
-        total_waiting_time = 0
-        for i in range(len(process_data)):
-            waiting_time = process_data[i][6] - process_data[i][2]
-            total_waiting_time = total_waiting_time + waiting_time
-            process_data[i].append(waiting_time)
-        average_waiting_time = total_waiting_time / 5
-        return average_waiting_time
+    def calcularTempoEspera(self, dados_processo):
+        # Calcula o tempo de espera médio dos processos
+        tempo_total_espera = 0
+        for i in range(len(dados_processo)):
+            tempo_espera = dados_processo[i][6] - dados_processo[i][2]  # Tempo de término de execução - Tempo de burst
+            tempo_total_espera = tempo_total_espera + tempo_espera
+            dados_processo[i].append(tempo_espera)
+        tempo_espera_medio = tempo_total_espera / 5
+        return tempo_espera_medio
 
 
 class SRTF:
-    def __init__(self, a1, a2, a3, a4, a5, b1, b2, b3, b4, b5, root, rr, calrr, algo):
+    def __init__(self, a1, a2, a3, a4, a5, b1, b2, b3, b4, b5, raiz, rr, calrr, algo):
+        # Inicializa os atributos da classe com os parâmetros fornecidos
         self.a1 = a1
         self.a2 = a2
         self.a3 = a3
@@ -261,99 +270,103 @@ class SRTF:
         self.b3 = b3
         self.b4 = b4
         self.b5 = b5
-        self.root = root
+        self.raiz = raiz
         self.rr = rr
         self.calrr = calrr
         self.algo = algo
 
-    def processData(self):
-        process_data = []
-        temporary = []
-        process_id = [1, 2, 3, 4, 5]
-        arrival_time = [self.a1, self.a2, self.a3, self.a4, self.a5]
-        burst_time = [self.b1, self.b2, self.b3, self.b4, self.b5]
+    def processarDados(self):
+        # Processa os dados dos processos para serem utilizados no escalonamento
+        dados_processo = []
+        temporario = []
+        id_processo = [1, 2, 3, 4, 5]
+        tempo_chegada = [self.a1, self.a2, self.a3, self.a4, self.a5]
+        tempo_execucao = [self.b1, self.b2, self.b3, self.b4, self.b5]
         for i in range(5):
-            temporary.extend([process_id[i], arrival_time[i], burst_time[i], 0, burst_time[i]])
-            process_data.append(temporary)
-            temporary = []
-        SRTF.schedulingProcess(self, process_data)
+            temporario.extend([id_processo[i], tempo_chegada[i], tempo_execucao[i], 0, tempo_execucao[i]])
+            dados_processo.append(temporario)
+            temporario = []
+        self.escalonarProcessos(dados_processo)
 
-    def schedulingProcess(self, process_data):
-        start_time = []
-        exit_time = []
-        s_time = 0
-        sequence_of_process = []
-        process_data.sort(key=lambda x: x[1])
+    def escalonarProcessos(self, dados_processo):
+        # Realiza o escalonamento dos processos pelo menor tempo restante
+        inicio_execucao = []
+        fim_execucao = []
+        tempo_atual = 0
+        sequencia_de_processos = []
+        dados_processo.sort(key=lambda x: x[1])  # Ordena os processos por tempo de chegada
         while 1:
-            ready_queue = []
-            normal_queue = []
+            fila_pronta = []
+            fila_normal = []
             temp = []
-            for i in range(len(process_data)):
-                if process_data[i][1] <= s_time and process_data[i][3] == 0:
-                    temp.extend([process_data[i][0], process_data[i][1], process_data[i][2], process_data[i][4]])
-                    ready_queue.append(temp)
+            for i in range(len(dados_processo)):
+                if dados_processo[i][1] <= tempo_atual and dados_processo[i][3] == 0:
+                    temp.extend([dados_processo[i][0], dados_processo[i][1], dados_processo[i][2], dados_processo[i][4]])
+                    fila_pronta.append(temp)
                     temp = []
-                elif process_data[i][3] == 0:
-                    temp.extend([process_data[i][0], process_data[i][1], process_data[i][2], process_data[i][4]])
-                    normal_queue.append(temp)
+                elif dados_processo[i][3] == 0:
+                    temp.extend([dados_processo[i][0], dados_processo[i][1], dados_processo[i][2], dados_processo[i][4]])
+                    fila_normal.append(temp)
                     temp = []
-            if len(ready_queue) == 0 and len(normal_queue) == 0:
+            if len(fila_pronta) == 0 and len(fila_normal) == 0:
                 break
-            if len(ready_queue) != 0:
-                ready_queue.sort(key=lambda x: x[2])
-                start_time.append(s_time)
-                s_time = s_time + 1
-                e_time = s_time
-                exit_time.append(e_time)
-                sequence_of_process.append(ready_queue[0][0])
-                for k in range(len(process_data)):
-                    if process_data[k][0] == ready_queue[0][0]:
+            if len(fila_pronta) != 0:
+                fila_pronta.sort(key=lambda x: x[2])  # Ordena a fila pelos menores tempos restantes
+                inicio_execucao.append(tempo_atual)
+                tempo_atual = tempo_atual + 1
+                fim_execucao.append(tempo_atual)
+                sequencia_de_processos.append(fila_pronta[0][0])
+                for k in range(len(dados_processo)):
+                    if dados_processo[k][0] == fila_pronta[0][0]:
                         break
-                process_data[k][2] = process_data[k][2] - 1
-                if process_data[k][2] == 0:
-                    process_data[k][3] = 1
-                    process_data[k].append(e_time)
-            if len(ready_queue) == 0:
-                if s_time < normal_queue[0][1]:
-                    s_time = normal_queue[0][1]
-                start_time.append(s_time)
-                s_time = s_time + 1
-                e_time = s_time
-                exit_time.append(e_time)
-                sequence_of_process.append(normal_queue[0][0])
-                for k in range(len(process_data)):
-                    if process_data[k][0] == normal_queue[0][0]:
+                dados_processo[k][2] = dados_processo[k][2] - 1  # Reduz o tempo restante de execução
+                if dados_processo[k][2] == 0:
+                    dados_processo[k][3] = 1  # Marca o processo como concluído
+                    dados_processo[k].append(tempo_atual)  # Adiciona o tempo de término do processo
+            if len(fila_pronta) == 0:
+                if tempo_atual < fila_normal[0][1]:
+                    tempo_atual = fila_normal[0][1]
+                inicio_execucao.append(tempo_atual)
+                tempo_atual = tempo_atual + 1
+                fim_execucao.append(tempo_atual)
+                sequencia_de_processos.append(fila_normal[0][0])
+                for k in range(len(dados_processo)):
+                    if dados_processo[k][0] == fila_normal[0][0]:
                         break
-                process_data[k][2] = process_data[k][2] - 1
-                if process_data[k][2] == 0:
-                    process_data[k][3] = 1
-                    process_data[k].append(s_time)
-        t_time = SRTF.calculateTurnaroundTime(self, process_data)
-        w_time = SRTF.calculateWaitingTime(self, process_data)
-        d = Displaydata(self.root, self.rr, self.calrr, process_data, t_time, w_time, sequence_of_process, self.algo)
-        d.Display()
+                dados_processo[k][2] = dados_processo[k][2] - 1
+                if dados_processo[k][2] == 0:
+                    dados_processo[k][3] = 1
+                    dados_processo[k].append(tempo_atual)
+        tempo_retorno_medio = self.calcularTempoRetorno(dados_processo)  # Calcula o tempo de retorno médio
+        tempo_espera_medio = self.calcularTempoEspera(dados_processo)  # Calcula o tempo de espera médio
+        d = ExibirDados(self.raiz, self.rr, self.calrr, dados_processo, tempo_retorno_medio, tempo_espera_medio, sequencia_de_processos, self.algo)  # Exibe os resultados
+        d.exibir()
 
-    def calculateTurnaroundTime(self, process_data):
-        total_turnaround_time = 0
-        for i in range(len(process_data)):
-            turnaround_time = process_data[i][5] - process_data[i][1]
-            total_turnaround_time = total_turnaround_time + turnaround_time
-            process_data[i].append(turnaround_time)
-        average_turnaround_time = total_turnaround_time / len(process_data)
-        return average_turnaround_time
+    def calcularTempoRetorno(self, dados_processo):
+        # Calcula o tempo de retorno médio dos processos
+        tempo_total_retorno = 0
+        for i in range(len(dados_processo)):
+            tempo_retorno = dados_processo[i][5] - dados_processo[i][1]  # Tempo de término - Tempo de chegada
+            tempo_total_retorno = tempo_total_retorno + tempo_retorno
+            dados_processo[i].append(tempo_retorno)
+        tempo_retorno_medio = tempo_total_retorno / 5
+        return tempo_retorno_medio
 
-    def calculateWaitingTime(self, process_data):
-        total_waiting_time = 0
-        for i in range(len(process_data)):
-            waiting_time = process_data[i][6] - process_data[i][4]
-            total_waiting_time = total_waiting_time + waiting_time
-            process_data[i].append(waiting_time)
-        average_waiting_time = total_waiting_time / len(process_data)
-        return average_waiting_time
+    def calcularTempoEspera(self, dados_processo):
+        # Calcula o tempo de espera médio dos processos
+        tempo_total_espera = 0
+        for i in range(len(dados_processo)):
+            tempo_espera = dados_processo[i][6] - dados_processo[i][2]  # Tempo de término de execução - Tempo de burst
+            tempo_total_espera = tempo_total_espera + tempo_espera
+            dados_processo[i].append(tempo_espera)
+        tempo_espera_medio = tempo_total_espera / 5
+        return tempo_espera_medio
+
 
 
 class FCFS:
-    def __init__(self, a1, a2, a3, a4, a5, b1, b2, b3, b4, b5, root, rr, calrr, algo):
+    def __init__(self, a1, a2, a3, a4, a5, b1, b2, b3, b4, b5, raiz, rr, calrr, algo):
+        # Inicializa os atributos da classe com os parâmetros fornecidos
         self.a1 = a1
         self.a2 = a2
         self.a3 = a3
@@ -364,60 +377,65 @@ class FCFS:
         self.b3 = b3
         self.b4 = b4
         self.b5 = b5
-        self.root = root
+        self.raiz = raiz
         self.rr = rr
         self.calrr = calrr
         self.algo = algo
 
-    def processData(self):
-        process_data = []
-        temporary = []
-        process_id = [1, 2, 3, 4, 5]
-        arrival_time = [self.a1, self.a2, self.a3, self.a4, self.a5]
-        burst_time = [self.b1, self.b2, self.b3, self.b4, self.b5]
+    def processarDados(self):
+        # Processa os dados dos processos para serem utilizados no escalonamento
+        dados_processo = []
+        temporario = []
+        id_processo = [1, 2, 3, 4, 5]
+        tempo_chegada = [self.a1, self.a2, self.a3, self.a4, self.a5]
+        tempo_execucao = [self.b1, self.b2, self.b3, self.b4, self.b5]
         for i in range(5):
-            temporary.extend([process_id[i], arrival_time[i], burst_time[i], 0, 0])
-            process_data.append(temporary)
-            temporary = []
-        FCFS.schedulingProcess(self, process_data)
+            temporario.extend([id_processo[i], tempo_chegada[i], tempo_execucao[i], 0, 0])
+            dados_processo.append(temporario)
+            temporario = []
+        self.escalonarProcessos(dados_processo)
 
-    def schedulingProcess(self, process_data):
-        start_time = []
-        exit_time = []
-        s_time = 0
-        process_data.sort(key=lambda x: x[1])
-        for i in range(len(process_data)):
-            start_time.append(s_time)
-            s_time = s_time + process_data[i][2]
-            exit_time.append(s_time)
-            process_data[i].append(s_time)
-        t_time = FCFS.calculateTurnaroundTime(self, process_data)
-        w_time = FCFS.calculateWaitingTime(self, process_data)
-        d = Displaydata(self.root, self.rr, self.calrr, process_data, t_time, w_time, 0, self.algo)
-        d.Display()
+    def escalonarProcessos(self, dados_processo):
+        # Realiza o escalonamento dos processos pelo método First Come First Serve (FCFS)
+        inicio_execucao = []
+        fim_execucao = []
+        tempo_atual = 0
+        dados_processo.sort(key=lambda x: x[1])  # Ordena os processos por tempo de chegada
+        for i in range(len(dados_processo)):
+            inicio_execucao.append(tempo_atual)
+            tempo_atual = tempo_atual + dados_processo[i][2]  # Adiciona o tempo de burst ao tempo de início
+            fim_execucao.append(tempo_atual)
+            dados_processo[i].append(tempo_atual)  # Adiciona o tempo de término ao processo
+        tempo_retorno_medio = self.calcularTempoRetorno(dados_processo)  # Calcula o tempo de retorno médio
+        tempo_espera_medio = self.calcularTempoEspera(dados_processo)  # Calcula o tempo de espera médio
+        d = ExibirDados(self.raiz, self.rr, self.calrr, dados_processo, tempo_retorno_medio, tempo_espera_medio, 0, self.algo)  # Exibe os resultados
+        d.exibir()
 
-    def calculateTurnaroundTime(self, process_data):
-        total_turnaround_time = 0
+    def calcularTempoRetorno(self, dados_processo):
+        # Calcula o tempo de retorno médio dos processos
+        tempo_total_retorno = 0
         for i in range(5):
-            turnaround_time = process_data[i][5] - process_data[i][1]
-            total_turnaround_time = total_turnaround_time + turnaround_time
-            process_data[i].append(turnaround_time)
-        average_turnaround_time = total_turnaround_time / 5
-        return average_turnaround_time
+            tempo_retorno = dados_processo[i][5] - dados_processo[i][1]  # Tempo de término - Tempo de chegada
+            tempo_total_retorno = tempo_total_retorno + tempo_retorno
+            dados_processo[i].append(tempo_retorno)
+        tempo_retorno_medio = tempo_total_retorno / 5
+        return tempo_retorno_medio
 
-    def calculateWaitingTime(self, process_data):
-        total_waiting_time = 0
-        for i in range(len(process_data)):
-            waiting_time = process_data[i][6] - process_data[i][2]
-            total_waiting_time = total_waiting_time + waiting_time
-            process_data[i].append(waiting_time)
-        average_waiting_time = total_waiting_time / 5
-        return average_waiting_time
+    def calcularTempoEspera(self, dados_processo):
+        # Calcula o tempo de espera médio dos processos
+        tempo_total_espera = 0
+        for i in range(len(dados_processo)):
+            tempo_espera = dados_processo[i][6] - dados_processo[i][2]  # Tempo de término de execução - Tempo de burst
+            tempo_total_espera = tempo_total_espera + tempo_espera
+            dados_processo[i].append(tempo_espera)
+        tempo_espera_medio = tempo_total_espera / 5
+        return tempo_espera_medio
+
 
 
 class SJF:
-
-    def __init__(self, a1, a2, a3, a4, a5, b1, b2, b3, b4, b5, root, rr, calrr, algo):
+    def __init__(self, a1, a2, a3, a4, a5, b1, b2, b3, b4, b5, raiz, rr, calrr, algo):
+        # Inicializa os atributos da classe com os parâmetros fornecidos
         self.a1 = a1
         self.a2 = a2
         self.a3 = a3
@@ -428,78 +446,82 @@ class SJF:
         self.b3 = b3
         self.b4 = b4
         self.b5 = b5
-        self.root = root
+        self.raiz = raiz
         self.rr = rr
         self.calrr = calrr
         self.algo = algo
 
-    def processData(self):
-        process_data = []
-        temporary = []
-        process_id = [1, 2, 3, 4, 5]
-        arrival_time = [self.a1, self.a2, self.a3, self.a4, self.a5]
-        burst_time = [self.b1, self.b2, self.b3, self.b4, self.b5]
+    def processarDados(self):
+        # Processa os dados dos processos para serem utilizados no escalonamento
+        dados_processo = []
+        temporario = []
+        id_processo = [1, 2, 3, 4, 5]
+        tempo_chegada = [self.a1, self.a2, self.a3, self.a4, self.a5]
+        tempo_execucao = [self.b1, self.b2, self.b3, self.b4, self.b5]
         for i in range(5):
-            temporary.extend([process_id[i], arrival_time[i], burst_time[i], 0, 0])
-            process_data.append(temporary)
-            temporary = []
-        SJF.schedulingProcess(self, process_data)
+            temporario.extend([id_processo[i], tempo_chegada[i], tempo_execucao[i], 0, 0])
+            dados_processo.append(temporario)
+            temporario = []
+        self.escalonarProcessos(dados_processo)
 
-    def schedulingProcess(self, process_data):
-        s_time = 0
-        process_data.sort(key=lambda x: x[1])
+    def escalonarProcessos(self, dados_processo):
+        # Realiza o escalonamento dos processos pelo método Shortest Job First (SJF)
+        tempo_atual = 0
+        dados_processo.sort(key=lambda x: x[1])  # Ordena os processos por tempo de chegada
         for i in range(5):
-            ready_queue = []
-            normal_queue = []
+            fila_pronta = []
+            fila_normal = []
             for j in range(5):
-                if (process_data[j][1] <= s_time) and (process_data[j][3] == 0):
-                    ready_queue.append([process_data[j][0], process_data[j][1], process_data[j][2]])
-                elif process_data[j][3] == 0:
-                    normal_queue.append([process_data[j][0], process_data[j][1], process_data[j][2]])
-            if len(ready_queue) != 0:
-                ready_queue.sort(key=lambda x: x[2])
-                s_time = s_time + ready_queue[0][2]
+                if (dados_processo[j][1] <= tempo_atual) and (dados_processo[j][3] == 0):
+                    fila_pronta.append([dados_processo[j][0], dados_processo[j][1], dados_processo[j][2]])
+                elif dados_processo[j][3] == 0:
+                    fila_normal.append([dados_processo[j][0], dados_processo[j][1], dados_processo[j][2]])
+            if len(fila_pronta) != 0:
+                fila_pronta.sort(key=lambda x: x[2])  # Ordena a fila pronta pelo tempo de burst
+                tempo_atual = tempo_atual + fila_pronta[0][2]  # Adiciona o tempo de burst ao tempo atual
                 for k in range(5):
-                    if ready_queue[0][0] == process_data[k][0]:
+                    if fila_pronta[0][0] == dados_processo[k][0]:
                         break
-                process_data[k][3] = 1
-                process_data[k].append(s_time)
-            elif len(ready_queue) == 0:
-                if normal_queue[0][1] > s_time:
-                    s_time = normal_queue[0][1]
-                s_time = s_time + normal_queue[0][2]
-                for k in range(len(process_data)):
-                    if process_data[k][0] == normal_queue[0][0]:
+                dados_processo[k][3] = 1  # Marca o processo como executado
+                dados_processo[k].append(tempo_atual)  # Adiciona o tempo de término ao processo
+            elif len(fila_pronta) == 0:
+                if fila_normal[0][1] > tempo_atual:
+                    tempo_atual = fila_normal[0][1]  # Atualiza o tempo atual para o próximo processo na fila normal
+                tempo_atual = tempo_atual + fila_normal[0][2]  # Adiciona o tempo de burst ao tempo atual
+                for k in range(len(dados_processo)):
+                    if dados_processo[k][0] == fila_normal[0][0]:
                         break
-                process_data[k][3] = 1
-                process_data[k].append(s_time)
-        t_time = SJF.calculateTurnaroundTime(self, process_data)
-        w_time = SJF.calculateWaitingTime(self, process_data)
-        d = Displaydata(self.root, self.rr, self.calrr, process_data, t_time, w_time, 0, self.algo)
-        d.Display()
+                dados_processo[k][3] = 1  # Marca o processo como executado
+                dados_processo[k].append(tempo_atual)  # Adiciona o tempo de término ao processo
+        tempo_retorno_medio = self.calcularTempoRetorno(dados_processo)  # Calcula o tempo de retorno médio
+        tempo_espera_medio = self.calcularTempoEspera(dados_processo)  # Calcula o tempo de espera médio
+        d = ExibirDados(self.raiz, self.rr, self.calrr, dados_processo, tempo_retorno_medio, tempo_espera_medio, 0, self.algo)  # Exibe os resultados
+        d.exibir()
 
-    def calculateTurnaroundTime(self, process_data):
-        total_turnaround_time = 0
+    def calcularTempoRetorno(self, dados_processo):
+        # Calcula o tempo de retorno médio dos processos
+        tempo_total_retorno = 0
         for i in range(5):
-            turnaround_time = process_data[i][5] - process_data[i][1]
-            total_turnaround_time = total_turnaround_time + turnaround_time
-            process_data[i].append(turnaround_time)
-        average_turnaround_time = total_turnaround_time / 5
-        return average_turnaround_time
+            tempo_retorno = dados_processo[i][5] - dados_processo[i][1]  # Tempo de término - Tempo de chegada
+            tempo_total_retorno = tempo_total_retorno + tempo_retorno
+            dados_processo[i].append(tempo_retorno)
+        tempo_retorno_medio = tempo_total_retorno / 5
+        return tempo_retorno_medio
 
-    def calculateWaitingTime(self, process_data):
-        total_waiting_time = 0
-        for i in range(len(process_data)):
-            waiting_time = process_data[i][6] - process_data[i][2]
-            total_waiting_time = total_waiting_time + waiting_time
-            process_data[i].append(waiting_time)
-        average_waiting_time = total_waiting_time / 5
-        return average_waiting_time
+    def calcularTempoEspera(self, dados_processo):
+        # Calcula o tempo de espera médio dos processos
+        tempo_total_espera = 0
+        for i in range(len(dados_processo)):
+            tempo_espera = dados_processo[i][6] - dados_processo[i][2]  # Tempo de término de execução - Tempo de burst
+            tempo_total_espera = tempo_total_espera + tempo_espera
+            dados_processo[i].append(tempo_espera)
+        tempo_espera_medio = tempo_total_espera / len(dados_processo)  # Calcular a média
+        return tempo_espera_medio  # Retornar o tempo de espera médio
 
 
 class RoundRobin:
-
-    def __init__(self, a1, a2, a3, a4, a5, b1, b2, b3, b4, b5, t, root, rr, calrr, algo):
+    def __init__(self, a1, a2, a3, a4, a5, b1, b2, b3, b4, b5, t, raiz, rr, calrr, algo):
+        # Inicializa os atributos da classe com os parâmetros fornecidos
         self.a1 = a1
         self.a2 = a2
         self.a3 = a3
@@ -510,215 +532,202 @@ class RoundRobin:
         self.b3 = b3
         self.b4 = b4
         self.b5 = b5
-        self.root = root
+        self.raiz = raiz
         self.rr = rr
         self.calrr = calrr
         self.algo = algo
         self.t = t
 
-    def processData(self):
-        process_data = []
-        temporary = []
-        process_id = [1, 2, 3, 4, 5]
-        arrival_time = [self.a1, self.a2, self.a3, self.a4, self.a5]
-        burst_time = [self.b1, self.b2, self.b3, self.b4, self.b5]
+    def processarDados(self):
+        # Processa os dados dos processos para serem utilizados no escalonamento
+        dados_processo = []
+        temporario = []
+        id_processo = [1, 2, 3, 4, 5]
+        tempo_chegada = [self.a1, self.a2, self.a3, self.a4, self.a5]
+        tempo_execucao = [self.b1, self.b2, self.b3, self.b4, self.b5]
 
         for i in range(5):
-            temporary.extend([process_id[i], arrival_time[i], burst_time[i], 0, burst_time[i]])
-            process_data.append(temporary)
-            temporary = []
-        time_slice = self.t
-        RoundRobin.schedulingProcess(self, process_data, time_slice)
+            temporario.extend([id_processo[i], tempo_chegada[i], tempo_execucao[i], 0, tempo_execucao[i]])
+            dados_processo.append(temporario)
+            temporario = []
+        fatia_tempo = self.t
+        self.escalonarProcessos(dados_processo, fatia_tempo)
 
-    def schedulingProcess(self, process_data, time_slice):
-        start_time = []
-        exit_time = []
-        executed_process = []
-        ready_queue = []
+    def escalonarProcessos(self, dados_processo, fatia_tempo):
+        # Realiza o escalonamento dos processos pelo método Round Robin (RR)
+        tempo_inicio = []
+        tempo_saida = []
+        processos_executados = []
+        fila_pronta = []
         s_time = 0
-        process_data.sort(key=lambda x: x[1])
+        dados_processo.sort(key=lambda x: x[1])  # Ordena os processos por tempo de chegada
         while 1:
-            normal_queue = []
+            fila_normal = []
             temp = []
-            for i in range(len(process_data)):
-                if process_data[i][1] <= s_time and process_data[i][3] == 0:
-                    present = 0
-                    if len(ready_queue) != 0:
-                        for k in range(len(ready_queue)):
-                            if process_data[i][0] == ready_queue[k][0]:
-                                present = 1
-                    if present == 0:
-                        temp.extend([process_data[i][0], process_data[i][1], process_data[i][2], process_data[i][4]])
-                        ready_queue.append(temp)
+            for i in range(len(dados_processo)):
+                if dados_processo[i][1] <= s_time and dados_processo[i][3] == 0:
+                    presente = 0
+                    if len(fila_pronta) != 0:
+                        for k in range(len(fila_pronta)):
+                            if dados_processo[i][0] == fila_pronta[k][0]:
+                                presente = 1
+                    if presente == 0:
+                        temp.extend([dados_processo[i][0], dados_processo[i][1], dados_processo[i][2], dados_processo[i][4]])
+                        fila_pronta.append(temp)
                         temp = []
-                    if len(ready_queue) != 0 and len(executed_process) != 0:
-                        for k in range(len(ready_queue)):
-                            if ready_queue[k][0] == executed_process[len(executed_process) - 1]:
-                                ready_queue.insert((len(ready_queue) - 1), ready_queue.pop(k))
-                elif process_data[i][3] == 0:
-                    temp.extend([process_data[i][0], process_data[i][1], process_data[i][2], process_data[i][4]])
-                    normal_queue.append(temp)
+                    if len(fila_pronta) != 0 and len(processos_executados) != 0:
+                        for k in range(len(fila_pronta)):
+                            if fila_pronta[k][0] == processos_executados[len(processos_executados) - 1]:
+                                fila_pronta.insert((len(fila_pronta) - 1), fila_pronta.pop(k))
+                elif dados_processo[i][3] == 0:
+                    temp.extend([dados_processo[i][0], dados_processo[i][1], dados_processo[i][2], dados_processo[i][4]])
+                    fila_normal.append(temp)
                     temp = []
-            if len(ready_queue) == 0 and len(normal_queue) == 0:
+            if len(fila_pronta) == 0 and len(fila_normal) == 0:
                 break
-            if len(ready_queue) != 0:
-                if ready_queue[0][2] > time_slice:
-                    start_time.append(s_time)
-                    s_time = s_time + time_slice
+            if len(fila_pronta) != 0:
+                if fila_pronta[0][2] > fatia_tempo:
+                    tempo_inicio.append(s_time)
+                    s_time = s_time + fatia_tempo
                     e_time = s_time
-                    exit_time.append(e_time)
-                    executed_process.append(ready_queue[0][0])
-                    for j in range(len(process_data)):
-                        if process_data[j][0] == ready_queue[0][0]:
+                    tempo_saida.append(e_time)
+                    processos_executados.append(fila_pronta[0][0])
+                    for j in range(len(dados_processo)):
+                        if dados_processo[j][0] == fila_pronta[0][0]:
                             break
-                    process_data[j][2] = process_data[j][2] - time_slice
-                    ready_queue.pop(0)
-                elif ready_queue[0][2] <= time_slice:
-
-                    start_time.append(s_time)
-                    s_time = s_time + ready_queue[0][2]
+                    dados_processo[j][2] = dados_processo[j][2] - fatia_tempo
+                    fila_pronta.pop(0)
+                elif fila_pronta[0][2] <= fatia_tempo:
+                    tempo_inicio.append(s_time)
+                    s_time = s_time + fila_pronta[0][2]
                     e_time = s_time
-                    exit_time.append(e_time)
-                    executed_process.append(ready_queue[0][0])
-                    for j in range(len(process_data)):
-                        if process_data[j][0] == ready_queue[0][0]:
+                    tempo_saida.append(e_time)
+                    processos_executados.append(fila_pronta[0][0])
+                    for j in range(len(dados_processo)):
+                        if dados_processo[j][0] == fila_pronta[0][0]:
                             break
-                    process_data[j][2] = 0
-                    process_data[j][3] = 1
-                    process_data[j].append(e_time)
-                    ready_queue.pop(0)
-            elif len(ready_queue) == 0:
-                if s_time < normal_queue[0][1]:
-                    s_time = normal_queue[0][1]
-                if normal_queue[0][2] > time_slice:
-                    start_time.append(s_time)
-                    s_time = s_time + time_slice
+                    dados_processo[j][2] = 0
+                    dados_processo[j][3] = 1
+                    dados_processo[j].append(e_time)
+                    fila_pronta.pop(0)
+            elif len(fila_pronta) == 0:
+                if s_time < fila_normal[0][1]:
+                    s_time = fila_normal[0][1]
+                if fila_normal[0][2] > fatia_tempo:
+                    tempo_inicio.append(s_time)
+                    s_time = s_time + fatia_tempo
                     e_time = s_time
-                    exit_time.append(e_time)
-                    executed_process.append(normal_queue[0][0])
-                    for j in range(len(process_data)):
-                        if process_data[j][0] == normal_queue[0][0]:
+                    tempo_saida.append(e_time)
+                    processos_executados.append(fila_normal[0][0])
+                    for j in range(len(dados_processo)):
+                        if dados_processo[j][0] == fila_normal[0][0]:
                             break
-                    process_data[j][2] = process_data[j][2] - time_slice
-                elif normal_queue[0][2] <= time_slice:
-                    start_time.append(s_time)
-                    s_time = s_time + normal_queue[0][2]
+                    dados_processo[j][2] = dados_processo[j][2] - fatia_tempo
+                elif fila_normal[0][2] <= fatia_tempo:
+                    tempo_inicio.append(s_time)
+                    s_time = s_time + fila_normal[0][2]
                     e_time = s_time
-                    exit_time.append(e_time)
-                    executed_process.append(normal_queue[0][0])
-                    for j in range(len(process_data)):
-                        if process_data[j][0] == normal_queue[0][0]:
+                    tempo_saida.append(e_time)
+                    processos_executados.append(fila_normal[0][0])
+                    for j in range(len(dados_processo)):
+                        if dados_processo[j][0] == fila_normal[0][0]:
                             break
-                    process_data[j][2] = 0
-                    process_data[j][3] = 1
-                    process_data[j].append(e_time)
-        t_time = RoundRobin.calculateTurnaroundTime(self, process_data)
-        w_time = RoundRobin.calculateWaitingTime(self, process_data)
-        d = Displaydata(self.root, self.rr, self.calrr, process_data, t_time, w_time, executed_process, self.algo)
-        d.Display()
-        '''
-        RoundRobin.printData(self, process_data, t_time, w_time, executed_process)
-        '''
+                    dados_processo[j][2] = 0
+                    dados_processo[j][3] = 1
+                    dados_processo[j].append(e_time)
+        t_time = RoundRobin.calcularTempoRetorno(self, dados_processo)  # Calcula o tempo de retorno médio
+        w_time = RoundRobin.calcularTempoEspera(self, dados_processo)  # Calcula o tempo de espera médio
+        d = ExibirDados(self.raiz, self.rr, self.calrr, dados_processo, t_time, w_time, processos_executados, self.algo)  # Exibe os resultados
+        d.exibir()
 
-    def calculateTurnaroundTime(self, process_data):
-        total_turnaround_time = 0
-        for i in range(len(process_data)):
-            turnaround_time = process_data[i][5] - process_data[i][1]
-            total_turnaround_time = total_turnaround_time + turnaround_time
-            process_data[i].append(turnaround_time)
-        average_turnaround_time = total_turnaround_time / 5
-        return average_turnaround_time
+    def calcularTempoRetorno(self, dados_processo):
+        # Calcula o tempo de retorno médio dos processos
+        tempo_total_retorno = 0
+        for i in range(len(dados_processo)):
+            tempo_retorno = dados_processo[i][5] - dados_processo[i][1]  # Tempo de término - Tempo de chegada
+            tempo_total_retorno = tempo_total_retorno + tempo_retorno
+            dados_processo[i].append(tempo_retorno)
+        tempo_retorno_medio = tempo_total_retorno / 5
+        return tempo_retorno_medio
 
-    def calculateWaitingTime(self, process_data):
-        total_waiting_time = 0
-        for i in range(len(process_data)):
-            waiting_time = process_data[i][6] - process_data[i][4]
-            total_waiting_time = total_waiting_time + waiting_time
-            process_data[i].append(waiting_time)
-        average_waiting_time = total_waiting_time / 5
-        return average_waiting_time
+    def calcularTempoEspera(self, dados_processo):
+        # Calcula o tempo de espera médio dos processos
+        tempo_total_espera = 0
+        for i in range(len(dados_processo)):
+            tempo_espera = dados_processo[i][6] - dados_processo[i][4]  # Tempo de término de execução - Tempo de burst original
+            tempo_total_espera = tempo_total_espera + tempo_espera
+            dados_processo[i].append(tempo_espera)
+        tempo_espera_medio = tempo_total_espera / 5
+        return tempo_espera_medio
 
 
-class Displaydata:
-    def __init__(self, root, rr, calrr, p, t, w, e, algo):
-        self.root = root
+
+
+class ExibirDados:
+    def __init__(self, raiz, rr, calrr, p, t, w, e, algo):
+        self.raiz = raiz
         self.rr = rr
         self.calrr = calrr
-        self.process_data = p
-        self.t_time = t
-        self.w_time = w
-        self.executed_process = e
-        self.algo = algo
+        self.dados_processo = p
+        self.tempo_total = t
+        self.tempo_total_espera = w
+        self.processos_executados = e
+        self.algoritmo = algo
 
-    def Display(self):
-        self.process_data.sort(key=lambda x: x[0])
+    def exibir(self):
+        self.dados_processo.sort(key=lambda x: x[0])
         tk.Label(self.calrr, text=" ").grid(row=0, column=0)
         tk.Label(self.calrr, text="PROCESSOS").grid(row=1, column=0)
         tk.Label(self.calrr, text="TEMPO DE CONCLUSÃO   ").grid(row=1, column=1)
         tk.Label(self.calrr, text="TEMPO DE RESPOSTA  ", font="verdana 11 ").grid(row=1, column=2)
         tk.Label(self.calrr, text="TEMPO DE ESPERA", font="verdana 11 ").grid(row=1, column=3)
         tk.Label(self.calrr, text=" ").grid(row=2, column=0)
-        tk.Label(self.calrr, text="P1 :", font="verdana 10 ").grid(row=3, column=0)
-        tk.Label(self.calrr, text=self.process_data[0][5], font="verdana 10 bold").grid(row=3, column=1)
-        tk.Label(self.calrr, text=self.process_data[0][6], font="verdana 10 bold").grid(row=3, column=2)
-        tk.Label(self.calrr, text=self.process_data[0][7], font="verdana 10 bold").grid(row=3, column=3)
-        tk.Label(self.calrr, text=" ").grid()
-        tk.Label(self.calrr, text="P2 :", font="verdana 10 ").grid(row=5, column=0)
-        tk.Label(self.calrr, text=self.process_data[1][5], font="verdana 10 bold").grid(row=5, column=1)
-        tk.Label(self.calrr, text=self.process_data[1][6], font="verdana 10 bold").grid(row=5, column=2)
-        tk.Label(self.calrr, text=self.process_data[1][7], font="verdana 10 bold").grid(row=5, column=3)
-        tk.Label(self.calrr, text=" ").grid()
-        tk.Label(self.calrr, text="P3 :", font="verdana 10 ").grid(row=7, column=0)
-        tk.Label(self.calrr, text=self.process_data[2][5], font="verdana 10 bold").grid(row=7, column=1)
-        tk.Label(self.calrr, text=self.process_data[2][6], font="verdana 10 bold").grid(row=7, column=2)
-        tk.Label(self.calrr, text=self.process_data[2][7], font="verdana 10 bold").grid(row=7, column=3)
-        tk.Label(self.calrr, text=" ").grid()
-        tk.Label(self.calrr, text="P4 :", font="verdana 10 ").grid(row=9, column=0)
-        tk.Label(self.calrr, text=self.process_data[3][5], font="verdana 10 bold").grid(row=9, column=1)
-        tk.Label(self.calrr, text=self.process_data[3][6], font="verdana 10 bold").grid(row=9, column=2)
-        tk.Label(self.calrr, text=self.process_data[3][7], font="verdana 10 bold").grid(row=9, column=3)
-        tk.Label(self.calrr, text=" ").grid()
-        tk.Label(self.calrr, text="P5 :", font="verdana 10 ").grid(row=11, column=0)
-        tk.Label(self.calrr, text=self.process_data[4][5], font="verdana 10 bold").grid(row=11, column=1)
-        tk.Label(self.calrr, text=self.process_data[4][6], font="verdana 10 bold").grid(row=11, column=2)
-        tk.Label(self.calrr, text=self.process_data[4][7], font="verdana 10 bold").grid(row=11, column=3)
-        tk.Label(self.calrr, text=" ").grid()
-        tk.Label(self.calrr, text="TEMPO MÉDIO DE VOLTA:", font="verdana 10").grid(row=13, column=0)
-        tk.Label(self.calrr, text=self.t_time, font="verdana 10 bold").grid(row=13, column=1)
-        tk.Label(self.calrr, text=" ").grid()
-        tk.Label(self.calrr, text="TEMPO MÉDIO DE ESPERA    :", font="verdana 10").grid(row=15, column=0)
-        tk.Label(self.calrr, text=self.w_time, font="verdana 10 bold").grid(row=15, column=1)
-        tk.Label(self.calrr, text=" ").grid()
-        if (self.algo == "ROUND-ROBIN" or self.algo == "SRTF"):
-            tk.Label(self.calrr, text="SEQUÊNCIA DO PROCESSO     :", font="verdana 10").grid(row=17, column=0)
-            tk.Label(self.calrr, text=str(self.executed_process), font="verdana 10 bold").grid(row=17, column=1)
-            tk.Label(self.calrr, text=" ").grid()
-        self.b1 = tk.Button(self.calrr, text="VOLTAR AO MENU", font="verdana 11 ", width=15, command=self.BackMenu).grid(
-            row=19, column=0)
-        tk.Label(self.root, text="").grid()
-        self.b1 = tk.Button(self.calrr, text="VOLTAR AO {}".format(self.algo), font="verdana 11 ", width=18,
-                            command=self.Back).grid(row=19, column=1)
-        tk.Label(self.root, text="").grid()
-        self.b1 = tk.Button(self.calrr, text="SAIR", font="verdana 11", width=15, command=self.EXIT).grid(row=19,
-                                                                                                          column=2)
-        tk.Label(self.root, text="").grid()
 
-    def Back(self):
+        for i in range(len(self.dados_processo)):
+            tk.Label(self.calrr, text=f"P{i+1} :", font="verdana 10 ").grid(row=i*2+3, column=0)
+            tk.Label(self.calrr, text=self.dados_processo[i][5], font="verdana 10 bold").grid(row=i*2+3, column=1)
+            tk.Label(self.calrr, text=self.dados_processo[i][6], font="verdana 10 bold").grid(row=i*2+3, column=2)
+            tk.Label(self.calrr, text=self.dados_processo[i][7], font="verdana 10 bold").grid(row=i*2+3, column=3)
+            tk.Label(self.calrr, text=" ").grid()
+
+        tk.Label(self.calrr, text="TEMPO MÉDIO DE VOLTA:", font="verdana 10").grid(row=len(self.dados_processo)*2+3, column=0)
+        tk.Label(self.calrr, text=self.tempo_total, font="verdana 10 bold").grid(row=len(self.dados_processo)*2+3, column=1)
+        tk.Label(self.calrr, text=" ").grid(row=len(self.dados_processo)*2+4, column=0)
+        tk.Label(self.calrr, text="TEMPO MÉDIO DE ESPERA    :", font="verdana 10").grid(row=len(self.dados_processo)*2+5, column=0)
+        tk.Label(self.calrr, text=self.tempo_total_espera, font="verdana 10 bold").grid(row=len(self.dados_processo)*2+5, column=1)
+        tk.Label(self.calrr, text=" ").grid(row=len(self.dados_processo)*2+6, column=0)
+
+        if self.algoritmo == "ROUND-ROBIN" or self.algoritmo == "SRTF":
+            tk.Label(self.calrr, text="SEQUÊNCIA DO PROCESSO     :", font="verdana 10").grid(row=len(self.dados_processo)*2+7, column=0)
+            tk.Label(self.calrr, text=str(self.processos_executados), font="verdana 10 bold").grid(row=len(self.dados_processo)*2+7, column=1)
+            tk.Label(self.calrr, text=" ").grid(row=len(self.dados_processo)*2+8, column=0)
+
+        tk.Button(self.calrr, text="VOLTAR AO MENU", font="verdana 11 ", width=15, command=self.voltar_menu).grid(row=len(self.dados_processo)*2+9, column=0)
+        tk.Label(self.raiz, text="").grid()
+        tk.Button(self.calrr, text=f"VOLTAR AO {self.algoritmo}", font="verdana 11 ", width=18, command=self.voltar).grid(row=len(self.dados_processo)*2+9, column=1)
+        tk.Label(self.raiz, text="").grid()
+        tk.Button(self.calrr, text="SAIR", font="verdana 11", width=15, command=self.sair).grid(row=len(self.dados_processo)*2+9, column=2)
+        tk.Label(self.raiz, text="").grid()
+
+    def voltar(self):
         self.calrr.destroy()
         self.rr.deiconify()
 
-    def EXIT(self):
+    def sair(self):
         self.calrr.destroy()
         self.rr.destroy()
-        self.root.destroy()
+        self.raiz.destroy()
 
-    def BackMenu(self):
+    def voltar_menu(self):
         self.calrr.destroy()
         self.rr.destroy()
-        self.root.deiconify()
+        self.raiz.deiconify()
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    b = MainWindow(root)
-    root.mainloop()
+    raiz = tk.Tk()
+    janela = JanelaPrincipal(raiz)
+
+#    janela.exibir()
+    raiz.mainloop()
+
