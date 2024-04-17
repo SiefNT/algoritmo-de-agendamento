@@ -32,6 +32,7 @@ class JanelaPrincipal:
         bb = Agendador(self.raiz, self.rr, algo)
 
 class Agendador:
+    #segunda tela
     def __init__(self, raiz, rr, algo):
         self.raiz = raiz
         self.rr = rr
@@ -290,14 +291,14 @@ class SRTF:
 
     def escalonarProcessos(self, dados_processo):
         # Realiza o escalonamento dos processos pelo menor tempo restante
-        inicio_execucao = []
-        fim_execucao = []
-        tempo_atual = 0
-        sequencia_de_processos = []
+        inicio_execucao = []#lista para armazenar os tempos de inicio de execução de cada processo
+        fim_execucao = []#lista para armazenar os tempos de fim de execução de cada processo
+        tempo_atual = 0#variável para controlar o tempo atual durante o processo de execução
+        sequencia_de_processos = []#lista para armazenar a ordem de execução do algoritmo
         dados_processo.sort(key=lambda x: x[1])  # Ordena os processos por tempo de chegada
         while 1:
-            fila_pronta = []
-            fila_normal = []
+            fila_pronta = []#lista para armazenar os processos prontos para execução,ou seja, aqueles que ja chegaram e tem tempo restante de execução maior que zero
+            fila_normal = []#lista para armazenar os processos que ainda não estão prontos para execução
             temp = []
             for i in range(len(dados_processo)):
                 if dados_processo[i][1] <= tempo_atual and dados_processo[i][3] == 0:
