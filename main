@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from functools import partial
 
 class JanelaPrincipal:
@@ -35,18 +36,13 @@ class JanelaPrincipal:
         self.raiz.withdraw()
         self.rr = tk.Toplevel(self.raiz)
         bb = Agendador(self.raiz, self.rr, algo)
-    def roundrobin(self, algo):
-        self.raiz.withdraw()
-        self.rr = tk.Toplevel(self.raiz)
-        bb = Agendador(self.raiz, self.rr, algo)
-
 class Agendador:
     #segunda tela
     def __init__(self, raiz, rr, algo):
         self.raiz = raiz
         self.rr = rr
         self.algo = algo
-        rr.geometry("+450+200")
+        rr.geometry("+500+200")
         self.frame = tk.Frame(self.rr)
         tk.Label(self.rr, text="").grid()
         tk.Label(self.rr, text="Processos", font="verdana 10 bold").grid(row=1, column=0)
@@ -77,26 +73,32 @@ class Agendador:
         self.p44 = tk.IntVar()
         self.p55 = tk.IntVar()
 
-        self.a1 = tk.Entry(self.rr, textvariable=self.a11).grid(row=3, column=1)
-        self.b1 = tk.Entry(self.rr, textvariable=self.b11).grid(row=3, column=3)
+        self.wt = tk.Button(self.rr, text="CALCULAR", width=15, command=self.calculaterr, state=tk.NORMAL)
+        self.label_error = tk.Label(self.rr, foreground='red')
+
+        validate = (rr.register(self.validate_entry), '%P', '%W')
+        invalid = (rr.register(self.on_invalid), '%P', '%W')
+
+        self.a1 = tk.Entry(self.rr, textvariable=self.a11, validate='all', validatecommand=validate, invalidcommand=invalid).grid(row=3, column=1)
+        self.b1 = tk.Entry(self.rr, textvariable=self.b11, validate='all', validatecommand=validate, invalidcommand=invalid).grid(row=3, column=3)
         if ("ROUND-ROBIN" == algo):
-            self.c1 = tk.Entry(self.rr, textvariable=self.c11).grid(row=3, column=5)
+            self.c1 = tk.Entry(self.rr, textvariable=self.c11, validate='all', validatecommand=validate, invalidcommand=invalid).grid(row=3, column=5)
         tk.Label(self.rr, text="").grid()
         tk.Label(self.rr, text="P2", font=" verdana 10 bold").grid(row=5, column=0)
-        self.a2 = tk.Entry(self.rr, textvariable=self.a22).grid(row=5, column=1)
-        self.b2 = tk.Entry(self.rr, textvariable=self.b22).grid(row=5, column=3)
+        self.a2 = tk.Entry(self.rr, textvariable=self.a22, validate='all', validatecommand=validate, invalidcommand=invalid).grid(row=5, column=1)
+        self.b2 = tk.Entry(self.rr, textvariable=self.b22, validate='all', validatecommand=validate, invalidcommand=invalid).grid(row=5, column=3)
         tk.Label(self.rr, text="").grid()
         tk.Label(self.rr, text="P3", font=" verdana 10 bold").grid(row=7, column=0)
-        self.a3 = tk.Entry(self.rr, textvariable=self.a33).grid(row=7, column=1)
-        self.b3 = tk.Entry(self.rr, textvariable=self.b33).grid(row=7, column=3)
+        self.a3 = tk.Entry(self.rr, textvariable=self.a33, validate='all', validatecommand=validate, invalidcommand=invalid).grid(row=7, column=1)
+        self.b3 = tk.Entry(self.rr, textvariable=self.b33, validate='all', validatecommand=validate, invalidcommand=invalid).grid(row=7, column=3)
         tk.Label(self.rr, text="").grid()
         tk.Label(self.rr, text="P4", font=" verdana 10 bold").grid(row=9, column=0)
-        self.a4 = tk.Entry(self.rr, textvariable=self.a44).grid(row=9, column=1)
-        self.b4 = tk.Entry(self.rr, textvariable=self.b44).grid(row=9, column=3)
+        self.a4 = tk.Entry(self.rr, textvariable=self.a44, validate='all', validatecommand=validate, invalidcommand=invalid).grid(row=9, column=1)
+        self.b4 = tk.Entry(self.rr, textvariable=self.b44, validate='all', validatecommand=validate, invalidcommand=invalid).grid(row=9, column=3)
         tk.Label(self.rr, text="").grid()
         tk.Label(self.rr, text="P5", font=" verdana 10 bold").grid(row=11, column=0)
-        self.a5 = tk.Entry(self.rr, textvariable=self.a55).grid(row=11, column=1)
-        self.b5 = tk.Entry(self.rr, textvariable=self.b55).grid(row=11, column=3)
+        self.a5 = tk.Entry(self.rr, textvariable=self.a55, validate='all', validatecommand=validate, invalidcommand=invalid).grid(row=11, column=1)
+        self.b5 = tk.Entry(self.rr, textvariable=self.b55, validate='all', validatecommand=validate, invalidcommand=invalid).grid(row=11, column=3)
         tk.Label(self.rr, text="").grid()
         z = 0
         self.choice = "HV"
@@ -114,9 +116,9 @@ class Agendador:
                                                                                                          column=1)
             tk.Label(self.rr, text="").grid()
             z = 5
-        self.button1 = tk.Button(self.rr, text="VOLTAR", command=self.voltar).grid(row=13 + z, column=0)
-        self.wt = tk.Button(self.rr, text="CALCULAR", width=15, command=self.calculaterr).grid(row=13 + z, column=1)
-        self.button1 = tk.Button(self.rr, text="SAIR", command=self.limpar).grid(row=13 + z, column=2)
+        self.button1 = tk.Button(self.rr, text="VOLTAR", command=self.voltar).grid(row=14 + z, column=0)
+        self.wt.grid(row=14 + z, column=1)
+        self.button1 = tk.Button(self.rr, text="SAIR", command=self.limpar).grid(row=14 + z, column=2)
         self.frame.grid()
 
     def Choices(self, choice):
@@ -133,43 +135,117 @@ class Agendador:
 
     #
     def calculaterr(self):
-        self.rr.withdraw()
         self.calrr = tk.Toplevel(self.rr)
         self.calrr.geometry("+450+200")
         if (self.algo == "ROUND-ROBIN"):
-            obj = RoundRobin(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
-                             self.b11.get(), self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(),
-                             self.c11.get(), self.raiz, self.rr, self.calrr, self.algo)
-            obj.processarDados()
+            try:
+                obj = RoundRobin(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
+                                self.b11.get(), self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(),
+                                self.c11.get(), self.raiz, self.rr, self.calrr, self.algo)
+                if not obj.validate():
+                    self.show_error_calculate()
+                else:
+                    self.rr.withdraw()
+                    obj.processarDados()
+            except:
+                self.show_error_calculate()
         elif (self.algo == "FCFS"):
-            obj = FCFS(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
-                       self.b11.get(),
-                       self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.raiz, self.rr,
-                       self.calrr,
-                       self.algo)
-            obj.processarDados()
+            try:
+                obj = FCFS(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
+                        self.b11.get(),
+                        self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.raiz, self.rr,
+                        self.calrr,
+                        self.algo)
+                if not obj.validate():
+                    self.show_error_calculate()
+                else:
+                    self.rr.withdraw()
+                    obj.processarDados()
+            except:
+                self.show_error_calculate()
+                
         elif (self.algo == "SJF"):
-            obj = SJF(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
-                      self.b11.get(),
-                      self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.raiz, self.rr,
-                      self.calrr,
-                      self.algo)
-            obj.processarDados()
+            try:
+                obj = SJF(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
+                        self.b11.get(),
+                        self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.raiz, self.rr,
+                        self.calrr,
+                        self.algo)
+                if not obj.validate():
+                    self.show_error_calculate()
+                else:
+                    self.rr.withdraw()
+                    obj.processarDados()
+            except:
+                self.show_error_calculate()
         elif (self.algo == "SRTF"):
-            obj = SRTF(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
-                       self.b11.get(),
-                       self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.raiz, self.rr,
-                       self.calrr,
-                       self.algo)
-            obj.processarDados()
+            try:
+                obj = SRTF(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
+                        self.b11.get(),
+                        self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(), self.raiz, self.rr,
+                        self.calrr,
+                        self.algo)
+
+                if not obj.validate():
+                    self.show_error_calculate()
+                else:
+                    self.rr.withdraw()
+                    obj.processarDados()
+            except:
+                self.show_error_calculate()
         elif (self.algo == "Priority"):
-            obj = Prioridade(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
-                             self.b11.get(), self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(),
-                             self.p11.get(), self.p22.get(), self.p33.get(), self.p44.get(), self.p55.get(),
-                             self.raiz, self.rr, self.calrr, self.algo, self.choice)
-            obj.processarDados()
+            try:
+                obj = Prioridade(self.a11.get(), self.a22.get(), self.a33.get(), self.a44.get(), self.a55.get(),
+                                self.b11.get(), self.b22.get(), self.b33.get(), self.b44.get(), self.b55.get(),
+                                self.p11.get(), self.p22.get(), self.p33.get(), self.p44.get(), self.p55.get(),
+                                self.raiz, self.rr, self.calrr, self.algo, self.choice)
+                if not obj.validate():
+                    self.show_error_calculate()
+                else:
+                    self.rr.withdraw()
+                    obj.processarDados()
+            except:
+                self.show_error_calculate()
         return
 
+    def validate_entry(self, new_value, widget):
+        try:
+            res = False
+            if new_value == '':
+                self.show_message(widget, 'Digite apenas números positivos')
+                res = True
+
+            if str.isdigit(new_value):
+                self.show_message(widget)
+                self.rr.nametowidget(widget).config(highlightthickness=0)
+                res = True
+
+            return res
+        except Exception as error:
+            print(error)
+            return False
+
+    def on_invalid(self, new_value, widget):
+        try:
+            if new_value == "":
+                self.show_message(widget, 'Digite apenas números positivos')
+        except:
+            self.show_message(widget, 'Digite apenas números positivos')
+
+    def show_message(self, widget, error=''):
+        self.label_error['text'] = error
+        self.label_error['foreground'] = 'red'
+
+        if error != '':
+            try :
+                self.label_error.grid(row=13, column=1, sticky=tk.W, padx=5)
+                self.rr.nametowidget(widget).config(highlightthickness=2, highlightcolor="red")
+            except Exception as error:
+                print("An exception occurred:", error)
+    
+    def show_error_calculate(self):
+        self.calrr.withdraw()
+        messagebox.showerror(title='Campos Inválidos', message='Certifique-se que todos os campos estão preenchidos com valores maiores que 0')
 
 class Prioridade:
     def __init__(self, a1, a2, a3, a4, a5, b1, b2, b3, b4, b5, p1, p2, p3, p4, p5, raiz, rr, calrr, algo, choice):
@@ -265,6 +341,14 @@ class Prioridade:
             dados_processo[i].append(tempo_espera)
         tempo_espera_medio = tempo_total_espera / 5
         return tempo_espera_medio
+    
+    def validate(self):
+        attributes = ['a1', 'a2', 'a3', 'a4', 'a5', 'b1', 'b2', 'b3', 'b4', 'b5', 'p1', 'p2', 'p3', 'p4', 'p5']
+        for attr in attributes:
+            if (getattr(self, attr) <= 0):
+                return False
+        return True
+
 
 
 class SRTF:
@@ -372,6 +456,14 @@ class SRTF:
         tempo_espera_medio = tempo_total_espera / 5
         return tempo_espera_medio
 
+    def validate(self):
+        attributes = ['a1', 'a2', 'a3', 'a4', 'a5', 'b1', 'b2', 'b3', 'b4', 'b5']
+        for attr in attributes:
+            if (getattr(self, attr) <= 0):
+                return False
+        return True
+
+
 
 
 class FCFS:
@@ -440,6 +532,13 @@ class FCFS:
             dados_processo[i].append(tempo_espera)
         tempo_espera_medio = tempo_total_espera / 5
         return tempo_espera_medio
+
+    def validate(self):
+        attributes = ['a1', 'a2', 'a3', 'a4', 'a5', 'b1', 'b2', 'b3', 'b4', 'b5']
+        for attr in attributes:
+            if (getattr(self, attr) <= 0):
+                return False
+        return True
 
 
 
@@ -528,6 +627,14 @@ class SJF:
         tempo_espera_medio = tempo_total_espera / len(dados_processo)  # Calcular a média
         return tempo_espera_medio  # Retornar o tempo de espera médio
 
+    def validate(self):
+        attributes = ['a1', 'a2', 'a3', 'a4', 'a5', 'b1', 'b2', 'b3', 'b4', 'b5']
+        for attr in attributes:
+            if (getattr(self, attr) <= 0):
+                return False
+        return True
+
+
 
 class RoundRobin:
     def __init__(self, a1, a2, a3, a4, a5, b1, b2, b3, b4, b5, t, raiz, rr, calrr, algo):
@@ -565,17 +672,17 @@ class RoundRobin:
 
     def escalonarProcessos(self, dados_processo, fatia_tempo):
         # Realiza o escalonamento dos processos pelo método Round Robin (RR)
-        tempo_inicio = []#guarda os tempos de inicio de cada processo
-        tempo_saida = []#armazena os tempos de saida de cada processo
-        processos_executados = []#guarda a ordem de execução de cada projeto
-        fila_pronta = []#representa a fila de processos prontos para execução
-        s_time = 0#tempo atual de execução
-        dados_processo.sort(key=lambda x: x[1])# Ordena a lista dados_processo com base no segundo elemento de cada sublista,que representa o tempo de chegada dos processos.isso garante que os processos sejam escalonados na ordem correta de chegada
-        while 1:#inicia um loop infinito que será interrompido posteriormente quando não houver mais processos na fila pronta ou na fila normal
-            fila_normal = []#lista temporária utilizada para organizar os processos na fila de execução
-            temp = []#lista temporária utilizada para organizar os processos na fila de execução
+        tempo_inicio = []
+        tempo_saida = []
+        processos_executados = []
+        fila_pronta = []
+        s_time = 0
+        dados_processo.sort(key=lambda x: x[1])  # Ordena os processos por tempo de chegada
+        while 1:
+            fila_normal = []
+            temp = []
             for i in range(len(dados_processo)):
-                if dados_processo[i][1] <= s_time and dados_processo[i][3] == 0:#verifica se há processos na fila dados_processos que já chegaram (dados_processo[i][1] <= s_time) e que ainda não foram executados (dados_processo[i][3] == 0).Se essas condições forem verdadeiras, o processo é adicionado à fila_pronta
+                if dados_processo[i][1] <= s_time and dados_processo[i][3] == 0:
                     presente = 0
                     if len(fila_pronta) != 0:
                         for k in range(len(fila_pronta)):
@@ -589,15 +696,15 @@ class RoundRobin:
                         for k in range(len(fila_pronta)):
                             if fila_pronta[k][0] == processos_executados[len(processos_executados) - 1]:
                                 fila_pronta.insert((len(fila_pronta) - 1), fila_pronta.pop(k))
-                elif dados_processo[i][3] == 0:#adiciona processos à fila_normal que não estão prontos para execução
+                elif dados_processo[i][3] == 0:
                     temp.extend([dados_processo[i][0], dados_processo[i][1], dados_processo[i][2], dados_processo[i][4]])
                     fila_normal.append(temp)
                     temp = []
-            if len(fila_pronta) == 0 and len(fila_normal) == 0:#verifica se não há processos na fila_pronta e na fila_normal.Se ambos estiverem vazios,o loop é interrompido
+            if len(fila_pronta) == 0 and len(fila_normal) == 0:
                 break
-            if len(fila_pronta) != 0:#verifica se há processos na fila pronta para execução.Se houver, verifica se o tempo de execução do primeiro processo é maior que a fatia de tempo('fatia_tempo').Se for, o processo é executado por uma fatia de tempo e colocado de volta na fila pronta.Se for,o processo é executado por uma fatia de tempo e colocado de volta na fila pronta. Se não, o processo é executado até o final e removido da fila pronta 
-                if fila_pronta[0][2] > fatia_tempo:#Se houver, verifica se o tempo de execução do primeiro processo é maior que a fatia de tempo('fatia_tempo')
-                    tempo_inicio.append(s_time)#Se for, o processo é executado por uma fatia de tempo e colocado de volta na fila pronta
+            if len(fila_pronta) != 0:
+                if fila_pronta[0][2] > fatia_tempo:
+                    tempo_inicio.append(s_time)
                     s_time = s_time + fatia_tempo
                     e_time = s_time
                     tempo_saida.append(e_time)
@@ -669,6 +776,13 @@ class RoundRobin:
             dados_processo[i].append(tempo_espera)
         tempo_espera_medio = tempo_total_espera / 5
         return tempo_espera_medio
+
+    def validate(self):
+        attributes = ['a1', 'a2', 'a3', 'a4', 'a5', 'b1', 'b2', 'b3', 'b4', 'b5', 't']
+        for attr in attributes:
+            if (getattr(self, attr) <= 0):
+                return False
+        return True
 
 
 
