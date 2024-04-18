@@ -1,38 +1,42 @@
 import tkinter as tk
 from functools import partial
 
+
 class JanelaPrincipal:
     def __init__(self, raiz):
         self.raiz = raiz
         raiz.geometry("550x400+450+200")
         self.frame = tk.Frame(self.raiz)
-        tk.Label(self.raiz, text="ALGORITMOS DE AGENDAMENTO", font="verdana 14 bold").grid(padx=150)
-        tk.Label(self.raiz, text="").grid()
-        tk.Label(self.raiz, text="").grid()
-        tk.Label(self.raiz, text="").grid()
-        self.b1 = tk.Button(self.raiz, text="Round Robin", font="verdana 12 bold", bg="gray", width=15,
-                            command=partial(self.roundrobin, "ROUND-ROBIN")).grid()
-        tk.Label(self.raiz, text="").grid()
-        self.b2 = tk.Button(self.raiz, text="FCFS", font="verdana 12 bold", bg="gray", width=15,
-                            command=partial(self.roundrobin, "FCFS")).grid()
-        tk.Label(self.raiz, text="").grid()
-        self.b2 = tk.Button(self.raiz, text="SJF", font="verdana 12 bold", bg="gray", width=15,
-                            command=partial(self.roundrobin, "SJF")).grid()
-        tk.Label(self.raiz, text="").grid()
-        self.b2 = tk.Button(self.raiz, text="SRTF", font="verdana 12 bold", bg="gray", width=15,
-                            command=partial(self.roundrobin, "SRTF")).grid()
-        tk.Label(self.raiz, text="").grid()
-        self.b2 = tk.Button(self.raiz, text="PRIORITY", font="verdana 12 bold", bg="gray", width=15,
-                            command=partial(self.roundrobin, "Priority")).grid()
+
+        # Título principal
+        tk.Label(self.raiz, text="ALGORITMOS DE AGENDAMENTO", font="Verdana 14 bold").grid(row=0, column=0, padx=50,
+                                                                                           pady=20, columnspan=2)
+
+        # Espaços para alinhamento
+        tk.Label(self.raiz, text="").grid(row=1, column=0)
+        tk.Label(self.raiz, text="").grid(row=2, column=0)
+
+        # Botões estilizados
+        self.create_button("Round Robin", "ROUND-ROBIN", row=3)
+        self.create_button("FCFS", "FCFS", row=5)
+        self.create_button("SJF", "SJF", row=7)
+        self.create_button("SRTF", "SRTF", row=9)
+        self.create_button("Priority", "Priority", row=11)
+
         self.frame.grid()
+
+    def create_button(self, text, command, row):
+        button_style = {"font": "Verdana 12 bold", "bg": "lightblue", "width": 15}
+        tk.Button(self.raiz, text=text, command=partial(self.roundrobin, command), **button_style).grid(row=row,
+                                                                                                        column=0,
+                                                                                                        pady=5,
+                                                                                                        padx=100)
 
     def roundrobin(self, algo):
         self.raiz.withdraw()
         self.rr = tk.Toplevel(self.raiz)
         bb = Agendador(self.raiz, self.rr, algo)
-
 class Agendador:
-    #segunda tela
     def __init__(self, raiz, rr, algo):
         self.raiz = raiz
         self.rr = rr
@@ -291,14 +295,14 @@ class SRTF:
 
     def escalonarProcessos(self, dados_processo):
         # Realiza o escalonamento dos processos pelo menor tempo restante
-        inicio_execucao = []#lista para armazenar os tempos de inicio de execução de cada processo
-        fim_execucao = []#lista para armazenar os tempos de fim de execução de cada processo
-        tempo_atual = 0#variável para controlar o tempo atual durante o processo de execução
-        sequencia_de_processos = []#lista para armazenar a ordem de execução do algoritmo
+        inicio_execucao = []
+        fim_execucao = []
+        tempo_atual = 0
+        sequencia_de_processos = []
         dados_processo.sort(key=lambda x: x[1])  # Ordena os processos por tempo de chegada
         while 1:
-            fila_pronta = []#lista para armazenar os processos prontos para execução,ou seja, aqueles que ja chegaram e tem tempo restante de execução maior que zero
-            fila_normal = []#lista para armazenar os processos que ainda não estão prontos para execução
+            fila_pronta = []
+            fila_normal = []
             temp = []
             for i in range(len(dados_processo)):
                 if dados_processo[i][1] <= tempo_atual and dados_processo[i][3] == 0:
@@ -556,17 +560,17 @@ class RoundRobin:
 
     def escalonarProcessos(self, dados_processo, fatia_tempo):
         # Realiza o escalonamento dos processos pelo método Round Robin (RR)
-        tempo_inicio = []#guarda os tempos de inicio de cada processo
-        tempo_saida = []#armazena os tempos de saida de cada processo
-        processos_executados = []#guarda a ordem de execução de cada projeto
-        fila_pronta = []#representa a fila de processos prontos para execução
-        s_time = 0#tempo atual de execução
-        dados_processo.sort(key=lambda x: x[1])# Ordena a lista dados_processo com base no segundo elemento de cada sublista,que representa o tempo de chegada dos processos.isso garante que os processos sejam escalonados na ordem correta de chegada
-        while 1:#inicia um loop infinito que será interrompido posteriormente quando não houver mais processos na fila pronta ou na fila normal
-            fila_normal = []#lista temporária utilizada para organizar os processos na fila de execução
-            temp = []#lista temporária utilizada para organizar os processos na fila de execução
+        tempo_inicio = []
+        tempo_saida = []
+        processos_executados = []
+        fila_pronta = []
+        s_time = 0
+        dados_processo.sort(key=lambda x: x[1])  # Ordena os processos por tempo de chegada
+        while 1:
+            fila_normal = []
+            temp = []
             for i in range(len(dados_processo)):
-                if dados_processo[i][1] <= s_time and dados_processo[i][3] == 0:#verifica se há processos na fila dados_processos que já chegaram (dados_processo[i][1] <= s_time) e que ainda não foram executados (dados_processo[i][3] == 0).Se essas condições forem verdadeiras, o processo é adicionado à fila_pronta
+                if dados_processo[i][1] <= s_time and dados_processo[i][3] == 0:
                     presente = 0
                     if len(fila_pronta) != 0:
                         for k in range(len(fila_pronta)):
@@ -580,20 +584,16 @@ class RoundRobin:
                         for k in range(len(fila_pronta)):
                             if fila_pronta[k][0] == processos_executados[len(processos_executados) - 1]:
                                 fila_pronta.insert((len(fila_pronta) - 1), fila_pronta.pop(k))
-                elif dados_processo[i][3] == 0:#adiciona processos à fila_normal que não estão prontos para execução
+                elif dados_processo[i][3] == 0:
                     temp.extend([dados_processo[i][0], dados_processo[i][1], dados_processo[i][2], dados_processo[i][4]])
                     fila_normal.append(temp)
                     temp = []
-            if len(fila_pronta) == 0 and len(fila_normal) == 0:#verifica se não há processos na fila_pronta e na fila_normal.Se ambos estiverem vazios,o loop é interrompido
+            if len(fila_pronta) == 0 and len(fila_normal) == 0:
                 break
-            if len(fila_pronta) != 0:#verifica se há processos na fila pronta para execução.Se houver, verifica se o tempo de execução do primeiro processo é maior que a fatia de tempo('fatia_tempo').
-
-
-                
-                 
-                if fila_pronta[0][2] > fatia_tempo:#Se houver, verifica se o tempo de execução do primeiro processo é maior que a fatia de tempo('fatia_tempo')
-                    tempo_inicio.append(s_time)#Se for, o processo é executado por uma fatia de tempo e colocado de volta na fila pronta
-                    s_time = s_time + fatia_tempo# Se não, o processo é executado até o final e removido da fila pronta 
+            if len(fila_pronta) != 0:
+                if fila_pronta[0][2] > fatia_tempo:
+                    tempo_inicio.append(s_time)
+                    s_time = s_time + fatia_tempo
                     e_time = s_time
                     tempo_saida.append(e_time)
                     processos_executados.append(fila_pronta[0][0])
@@ -683,9 +683,9 @@ class ExibirDados:
         self.dados_processo.sort(key=lambda x: x[0])
         tk.Label(self.calrr, text=" ").grid(row=0, column=0)
         tk.Label(self.calrr, text="PROCESSOS").grid(row=1, column=0)
-        tk.Label(self.calrr, text="TEMPO DE CONCLUSÃO m/s").grid(row=1, column=1)
-        tk.Label(self.calrr, text="TEMPO DE RESPOSTA m/s", font="verdana 11 ").grid(row=1, column=2)
-        tk.Label(self.calrr, text="TEMPO DE ESPERA m/s", font="verdana 11 ").grid(row=1, column=3)
+        tk.Label(self.calrr, text="TEMPO DE CONCLUSÃO   ").grid(row=1, column=1)
+        tk.Label(self.calrr, text="TEMPO DE RESPOSTA  ", font="verdana 11 ").grid(row=1, column=2)
+        tk.Label(self.calrr, text="TEMPO DE ESPERA", font="verdana 11 ").grid(row=1, column=3)
         tk.Label(self.calrr, text=" ").grid(row=2, column=0)
 
         for i in range(len(self.dados_processo)):
@@ -695,10 +695,10 @@ class ExibirDados:
             tk.Label(self.calrr, text=self.dados_processo[i][7], font="verdana 10 bold").grid(row=i*2+3, column=3)
             tk.Label(self.calrr, text=" ").grid()
 
-        tk.Label(self.calrr, text="TEMPO MÉDIO DE VOLTA m/s:", font="verdana 10").grid(row=len(self.dados_processo)*2+3, column=0)
+        tk.Label(self.calrr, text="TEMPO MÉDIO DE VOLTA:", font="verdana 10").grid(row=len(self.dados_processo)*2+3, column=0)
         tk.Label(self.calrr, text=self.tempo_total, font="verdana 10 bold").grid(row=len(self.dados_processo)*2+3, column=1)
         tk.Label(self.calrr, text=" ").grid(row=len(self.dados_processo)*2+4, column=0)
-        tk.Label(self.calrr, text="TEMPO MÉDIO DE ESPERA m/s:", font="verdana 10").grid(row=len(self.dados_processo)*2+5, column=0)
+        tk.Label(self.calrr, text="TEMPO MÉDIO DE ESPERA    :", font="verdana 10").grid(row=len(self.dados_processo)*2+5, column=0)
         tk.Label(self.calrr, text=self.tempo_total_espera, font="verdana 10 bold").grid(row=len(self.dados_processo)*2+5, column=1)
         tk.Label(self.calrr, text=" ").grid(row=len(self.dados_processo)*2+6, column=0)
 
